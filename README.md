@@ -8,8 +8,10 @@ Uma ferramenta leve baseada em navegador para técnicos de campo e inspetores ge
 - **📁 Seleção de Arquivos**: Selecione imagens existentes da galeria do seu dispositivo
 - **✏️ Anotação de Imagens**: Adicione títulos e descrições a cada imagem
 - **📋 Gerenciamento de Relatórios**: Organize múltiplas imagens com reordenação por arrastar e soltar
+- **✏️ Edição de Imagens**: Edite metadados ou recapture imagens existentes
 - **📄 Geração de PDF**: Crie relatórios PDF profissionais com todas as imagens e metadados
 - **📱 Otimizado para Mobile**: Projetado para uso em navegadores móveis
+- **📐 Responsivo**: Imagens se ajustam automaticamente ao tamanho da tela
 - **🔒 Privacidade em Primeiro Lugar**: Sem contas necessárias, todos os dados ficam no seu dispositivo
 
 ## 🚀 Início Rápido
@@ -33,10 +35,13 @@ Uma ferramenta leve baseada em navegador para técnicos de campo e inspetores ge
 - Adicione um título para a imagem (obrigatório)
 - Adicione uma descrição opcional
 - O timestamp é adicionado automaticamente
+- Use "Refazer Foto" para capturar uma nova imagem
 - Clique em "Adicionar ao Relatório" para salvar
 
 ### Passo 3: Gerenciar Relatório
 - Visualize todas as imagens capturadas no resumo
+- **Arraste e solte** para reordenar as imagens
+- Clique no ícone de **editar** para modificar títulos/descrições
 - Remova imagens se necessário
 - Adicione mais imagens ou prossiga para finalizar
 

@@ -36,6 +36,7 @@ function setupEventListeners() {
 
     // Annotation controls
     document.getElementById('backToCaptureBtn').addEventListener('click', () => showStep('capture'));
+    document.getElementById('retakeFromEditBtn').addEventListener('click', retakeFromEdit);
     document.getElementById('addToReportBtn').addEventListener('click', addToReport);
 
     // Summary controls
@@ -142,12 +143,15 @@ function captureImage() {
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
 
-    // Set canvas size to match video
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    // Calculate responsive dimensions for captured image
+    let { width, height } = constrainImageSize(video.videoWidth, video.videoHeight);
 
-    // Draw video frame to canvas
-    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+    // Set canvas size to constrained dimensions
+    canvas.width = width;
+    canvas.height = height;
+
+    // Draw video frame to canvas with constrained size
+    ctx.drawImage(video, 0, 0, width, height);
 
     // Convert to base64
     capturedImage = canvas.toDataURL('image/jpeg', 0.8);
@@ -187,19 +191,53 @@ function handleFileSelect(event) {
             document.getElementById('camera').classList.add('hidden');
             document.getElementById('canvas').classList.remove('hidden');
 
-            // Display the selected image
+            // Display the selected image with responsive sizing
             const canvas = document.getElementById('canvas');
             const ctx = canvas.getContext('2d');
             const img = new Image();
             img.onload = function () {
-                canvas.width = img.width;
-                canvas.height = img.height;
-                ctx.drawImage(img, 0, 0);
+                // Calculate responsive dimensions
+                let { width, height } = constrainImageSize(img.width, img.height);
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
             };
             img.src = capturedImage;
         };
         reader.readAsDataURL(file);
     }
+}
+
+// Constrain image size while maintaining aspect ratio based on screen dimensions
+function constrainImageSize(originalWidth, originalHeight) {
+    // Get screen dimensions
+    const screenWidth = window.innerWidth;
+    const screenHeight = window.innerHeight;
+
+    // Calculate responsive max dimensions (80% of screen width, 60% of screen height)
+    const maxWidth = Math.min(screenWidth * 0.8, 800); // Cap at 800px for very large screens
+    const maxHeight = Math.min(screenHeight * 0.6, 600); // Cap at 600px for very large screens
+
+    let width = originalWidth;
+    let height = originalHeight;
+
+    // Calculate aspect ratio
+    const aspectRatio = width / height;
+
+    // Constrain by width
+    if (width > maxWidth) {
+        width = maxWidth;
+        height = width / aspectRatio;
+    }
+
+    // Constrain by height
+    if (height > maxHeight) {
+        height = maxHeight;
+        width = height * aspectRatio;
+    }
+
+    return { width, height };
 }
 
 // Retake image
@@ -266,20 +304,130 @@ function displayImagesList() {
 
     reportImages.forEach((imageData, index) => {
         const imageCard = document.createElement('div');
-        imageCard.className = 'bg-gray-50 rounded-lg p-4 border';
+        imageCard.className = 'bg-gray-50 rounded-lg p-4 border cursor-move hover:shadow-md transition-shadow duration-200';
+        imageCard.draggable = true;
+        imageCard.dataset.index = index;
         imageCard.innerHTML = `
             <div class="relative">
                 <img src="${imageData.image}" alt="${imageData.title}" class="w-full h-32 object-cover rounded mb-2">
-                <button onclick="removeImage(${index})" class="absolute top-2 right-2 bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
-                    <i class="fas fa-times"></i>
-                </button>
+                <div class="absolute top-2 right-2 flex space-x-1">
+                    <button onclick="editImage(${index})" class="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-blue-600">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="removeImage(${index})" class="bg-red-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs hover:bg-red-600">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="absolute top-2 left-2 bg-gray-800 bg-opacity-50 text-white rounded-full w-6 h-6 flex items-center justify-center text-xs">
+                    <i class="fas fa-grip-vertical"></i>
+                </div>
             </div>
             <h3 class="font-semibold text-gray-900 text-sm mb-1">${imageData.title}</h3>
             <p class="text-gray-600 text-xs mb-1">${imageData.description || 'Sem descrição'}</p>
             <p class="text-gray-500 text-xs">${imageData.timestamp}</p>
         `;
+
+        // Add drag event listeners
+        imageCard.addEventListener('dragstart', handleDragStart);
+        imageCard.addEventListener('dragover', handleDragOver);
+        imageCard.addEventListener('drop', handleDrop);
+        imageCard.addEventListener('dragenter', handleDragEnter);
+        imageCard.addEventListener('dragleave', handleDragLeave);
+        imageCard.addEventListener('dragend', handleDragEnd);
+
         imagesList.appendChild(imageCard);
     });
+}
+
+// Drag and drop variables
+let draggedElement = null;
+
+// Drag and drop handlers
+function handleDragStart(e) {
+    draggedElement = this;
+    this.style.opacity = '0.6';
+    this.style.transform = 'scale(1.05)';
+    this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.2)';
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/html', this.outerHTML);
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+}
+
+function handleDragEnter(e) {
+    this.classList.add('border-blue-500', 'border-2');
+}
+
+function handleDragLeave(e) {
+    this.classList.remove('border-blue-500', 'border-2');
+}
+
+function handleDragEnd(e) {
+    // Reset dragged element styles
+    if (draggedElement) {
+        draggedElement.style.opacity = '';
+        draggedElement.style.transform = '';
+        draggedElement.style.boxShadow = '';
+    }
+    draggedElement = null;
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    this.classList.remove('border-blue-500', 'border-2');
+
+    // Reset dragged element styles
+    if (draggedElement) {
+        draggedElement.style.opacity = '';
+        draggedElement.style.transform = '';
+        draggedElement.style.boxShadow = '';
+    }
+
+    if (draggedElement !== this) {
+        const draggedIndex = parseInt(draggedElement.dataset.index);
+        const dropIndex = parseInt(this.dataset.index);
+
+        // Reorder the array
+        const [movedItem] = reportImages.splice(draggedIndex, 1);
+        reportImages.splice(dropIndex, 0, movedItem);
+
+        // Refresh the display
+        displayImagesList();
+    }
+}
+
+// Edit image metadata
+function editImage(index) {
+    const imageData = reportImages[index];
+
+    // Store current image for editing
+    capturedImage = imageData.image;
+
+    // Fill the form with current data
+    document.getElementById('imageTitle').value = imageData.title;
+    document.getElementById('imageDescription').value = imageData.description || '';
+
+    // Remove the image from the array (will be re-added with updated data)
+    reportImages.splice(index, 1);
+
+    // Go to annotation step
+    showStep('annotate');
+}
+
+// Retake photo from edit screen
+function retakeFromEdit() {
+    // Clear the current image
+    capturedImage = null;
+
+    // Clear form fields
+    document.getElementById('imageTitle').value = '';
+    document.getElementById('imageDescription').value = '';
+
+    // Go back to capture step
+    showStep('capture');
 }
 
 // Remove image from report
@@ -395,9 +543,36 @@ function generatePDF() {
 // Download PDF
 function downloadPDF() {
     if (window.generatedPDF) {
+        const downloadBtn = document.getElementById('downloadPdfBtn');
+        const originalText = downloadBtn.innerHTML;
+
+        // Update button to show downloading state
+        downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>Baixando...';
+        downloadBtn.disabled = true;
+        downloadBtn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+        downloadBtn.classList.add('bg-gray-400');
+
+        // Get filename
         const reportTitle = document.getElementById('reportTitle').value.trim();
         const filename = `${reportTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_report.pdf`;
+
+        // Download the PDF
         window.generatedPDF.save(filename);
+
+        // Reset button after a short delay
+        setTimeout(() => {
+            downloadBtn.innerHTML = '<i class="fas fa-check mr-2"></i>Baixado com Sucesso!';
+            downloadBtn.classList.remove('bg-gray-400');
+            downloadBtn.classList.add('bg-green-600');
+
+            // Reset to original state after 3 seconds
+            setTimeout(() => {
+                downloadBtn.innerHTML = originalText;
+                downloadBtn.disabled = false;
+                downloadBtn.classList.remove('bg-green-600');
+                downloadBtn.classList.add('bg-blue-600', 'hover:bg-blue-700');
+            }, 3000);
+        }, 1000);
     }
 }
 
