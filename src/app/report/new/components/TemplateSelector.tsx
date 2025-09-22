@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { REPORT_TEMPLATES, type ReportTemplate } from '../../../../models/ReportTemplate';
 import './TemplateSelector.css';
 
@@ -11,6 +11,20 @@ interface TemplateSelectorProps {
 const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   onTemplateSelect
 }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  // Ensure proper margin is applied after component mounts
+  useEffect(() => {
+    if (containerRef.current) {
+      const element = containerRef.current;
+      // Force apply the margin if it's not already applied
+      if (element.style.marginTop !== '200px') {
+        element.style.marginTop = '200px';
+        element.style.paddingTop = '2rem';
+      }
+    }
+  }, []);
+
   const handleTemplateClick = (template: ReportTemplate) => {
     onTemplateSelect(template);
   };
@@ -29,7 +43,14 @@ const TemplateSelector: React.FC<TemplateSelectorProps> = ({
   };
 
   return (
-    <div className="template-selector">
+    <div 
+      ref={containerRef}
+      className="template-selector"
+      style={{ 
+        marginTop: '200px', // Fallback for production build CSS loading issues
+        paddingTop: '2rem'
+      }}
+    >
       <div className="templates-grid">
         {REPORT_TEMPLATES.map((template) => (
           <div
