@@ -1,124 +1,36 @@
-# 📷 Gerador de Relatórios de Inspeção
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-Uma ferramenta leve baseada em navegador para técnicos de campo e inspetores gerarem relatórios fotográficos profissionais usando seus dispositivos móveis.
+## Getting Started
 
-## ✨ Recursos
+First, run the development server:
 
-- **📸 Integração com Câmera**: Capture imagens diretamente da câmera do seu dispositivo
-- **📁 Seleção de Arquivos**: Selecione imagens existentes da galeria do seu dispositivo
-- **✏️ Anotação de Imagens**: Adicione títulos e descrições a cada imagem
-- **📋 Gerenciamento de Relatórios**: Organize múltiplas imagens com reordenação por arrastar e soltar
-- **✏️ Edição de Imagens**: Edite metadados ou recapture imagens existentes
-- **📄 Geração de PDF**: Crie relatórios PDF profissionais com todas as imagens e metadados
-- **📱 Otimizado para Mobile**: Projetado para uso em navegadores móveis
-- **📐 Responsivo**: Imagens se ajustam automaticamente ao tamanho da tela
-- **🔒 Privacidade em Primeiro Lugar**: Sem contas necessárias, todos os dados ficam no seu dispositivo
-
-## 🚀 Início Rápido
-
-1. **Abra o app**: Simplesmente abra `index.html` no seu navegador web
-2. **Conceda permissões da câmera**: Permita o acesso à câmera quando solicitado
-3. **Comece a capturar**: Clique em "Iniciar Relatório" e comece a tirar fotos
-4. **Adicione detalhes**: Dê um título e descrição opcional a cada imagem
-5. **Gere o relatório**: Preencha os detalhes do relatório e baixe seu PDF
-
-## 📱 Como Usar
-
-### Passo 1: Capturar/Selecionar Imagens
-- Clique em "Iniciar Relatório" para começar
-- **Opção 1 - Capturar**: Permita o acesso à câmera e clique em "Capturar Foto"
-- **Opção 2 - Selecionar**: Clique em "Selecionar Imagem" para escolher da galeria
-- Revise a imagem e clique em "Refazer" se necessário
-- Clique em "Próximo: Adicionar Detalhes" para continuar
-
-### Passo 2: Anotar Imagens
-- Adicione um título para a imagem (obrigatório)
-- Adicione uma descrição opcional
-- O timestamp é adicionado automaticamente
-- Use "Refazer Foto" para capturar uma nova imagem
-- Clique em "Adicionar ao Relatório" para salvar
-
-### Passo 3: Gerenciar Relatório
-- Visualize todas as imagens capturadas no resumo
-- **Arraste e solte** para reordenar as imagens
-- Clique no ícone de **editar** para modificar títulos/descrições
-- Remova imagens se necessário
-- Adicione mais imagens ou prossiga para finalizar
-
-### Passo 4: Gerar PDF
-- Digite o título do relatório e nome do autor (obrigatório)
-- Adicione informações opcionais do cliente
-- Clique em "Gerar PDF" para criar seu relatório
-- Baixe o arquivo PDF
-
-## 🛠️ Detalhes Técnicos
-
-### Stack Tecnológica
-- **Frontend**: HTML5, TailwindCSS, JavaScript Vanilla
-- **Acesso à Câmera**: API nativa `getUserMedia`
-- **Geração de PDF**: Biblioteca jsPDF
-- **Armazenamento**: Apenas client-side (memória do navegador)
-
-### Compatibilidade de Navegadores
-- **Chrome/Edge**: Suporte completo
-- **Firefox**: Suporte completo
-- **Safari**: Suporte completo (iOS 11+)
-- **Navegadores móveis**: Otimizado para uso móvel
-
-### Estrutura de Arquivos
-```
-report-generator/
-├── index.html          # Arquivo principal da aplicação
-├── app.js             # Funcionalidade JavaScript
-├── README.md          # Este arquivo
-└── INSTRUCTIONS.md    # Especificações originais
+```bash
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
-## 🔧 Requisitos do Navegador
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-- **HTTPS Obrigatório**: O acesso à câmera requer uma conexão segura
-- **Navegador Moderno**: Chrome 53+, Firefox 36+, Safari 11+
-- **Permissões da Câmera**: O usuário deve conceder acesso à câmera
+You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
-## 📋 Limitações (MVP)
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-- Máximo ~10 imagens por relatório (para performance)
-- Imagens são comprimidas para processamento mais rápido
-- Todos os dados são armazenados na memória do navegador (limpos ao atualizar a página)
-- Sem armazenamento em nuvem ou sistema de contas
+## Learn More
 
-## 🎯 Casos de Uso
+To learn more about Next.js, take a look at the following resources:
 
-- **Inspeções de Propriedades**: Documentar condições de propriedades
-- **Manutenção de Equipamentos**: Registrar status de equipamentos
-- **Inspeções de Segurança**: Documentar problemas de segurança
-- **Controle de Qualidade**: Acompanhar qualidade de produtos
-- **Serviço de Campo**: Documentar trabalhos de serviço
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-## 🔒 Privacidade e Segurança
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-- **Sem Comunicação com Servidor**: Todo processamento acontece localmente
-- **Sem Armazenamento de Dados**: Imagens não são enviadas para lugar nenhum
-- **Sem Rastreamento**: Sem código de analytics ou rastreamento
-- **Apenas Câmera**: Apenas permissões de câmera necessárias
+## Deploy on Vercel
 
-## 🚀 Melhorias Futuras
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-- Integração com armazenamento em nuvem
-- Contas de usuário e histórico de relatórios
-- Ferramentas avançadas de edição de imagens
-- Modelos de relatório personalizados
-- Funcionalidade offline
-- Suporte a múltiplos idiomas
-
-## 📞 Suporte
-
-Para problemas ou dúvidas:
-1. Verifique a compatibilidade do navegador
-2. Certifique-se de que as permissões da câmera foram concedidas
-3. Tente atualizar a página se a câmera não funcionar
-4. Use HTTPS se estiver testando localmente
-
----
-
-**Construído com ❤️ para profissionais de campo**
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
