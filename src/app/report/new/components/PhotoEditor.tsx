@@ -15,12 +15,14 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
   onSavePhoto,
   onCancel
 }) => {
+  const [photo, setPhoto] = React.useState<Photo | null>(editingPhoto);
+
   if (!editingPhoto) return null;
 
-  const [photo, setPhoto] = React.useState<Photo>(editingPhoto);
-
   const handleSave = () => {
-    onSavePhoto(photo);
+    if (photo) {
+      onSavePhoto(photo);
+    }
   };
 
   return (
@@ -35,7 +37,7 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
 
         <div className="photo-editor-body">
           <div className="photo-preview">
-            <img src={getPhotoSrc(photo)} alt="Preview" />
+            <img src={getPhotoSrc(photo!)} alt="Preview" />
           </div>
           
           <div className="photo-edit-form">
@@ -43,9 +45,9 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
               <label>Legenda da Foto</label>
               <input
                 type="text"
-                value={photo.subtitle}
+                value={photo?.subtitle}
                 onChange={(e) => setPhoto({
-                  ...photo,
+                  ...photo!,
                   subtitle: e.target.value
                 })}
                 placeholder="Digite a legenda da foto"

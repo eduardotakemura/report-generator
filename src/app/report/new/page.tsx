@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter } from 'next/navigation';
 import { useReportGeneration } from './hooks/useReportGeneration';
 import TemplateSelector from './components/TemplateSelector';
@@ -305,4 +305,10 @@ const ReportGenerationPage: React.FC = () => {
   );
 };
 
-export default ReportGenerationPage;
+const ReportGenerationPageWithSuspense = () => (
+  <Suspense fallback={<div>Loading...</div>}>
+    <ReportGenerationPage />
+  </Suspense>
+);
+
+export default ReportGenerationPageWithSuspense;

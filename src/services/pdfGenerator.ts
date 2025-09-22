@@ -61,7 +61,7 @@ export class PDFGenerator {
     const tableWidth = this.contentWidth;
     const valueWidth = tableWidth - labelWidth;
 
-    const details = reportData.details || ({} as any);
+    const details = reportData.details;
     const rows = [
       { label: 'Cliente', value: details.clientName },
       { label: 'Nota Técnica', value: details.number },
@@ -199,10 +199,10 @@ doc.text(`Gerado em: ${timestamp}`, this.margin, this.pageHeight - 12);
     let y = startY;
     while (idx < loaded.length) {
       const remaining = loaded.length - idx;
-      let rowCols = Math.min(columns, remaining);
-      let spanLast = rowCols === 1 && columns > 1;
+      const rowCols = Math.min(columns, remaining);
+      const spanLast = rowCols === 1 && columns > 1;
 
-      let rowHeight = 70; // target height (will be scaled)
+      const rowHeight = 70; // target height (will be scaled)
       let x = this.margin;
 
       for (let c = 0; c < rowCols; c++) {
@@ -282,16 +282,9 @@ doc.text(`Gerado em: ${timestamp}`, this.margin, this.pageHeight - 12);
             img.onload = () => resolve({ photo: p, img });
             img.onerror = () => reject();
             img.src = getPhotoSrc(p) || '';
-          }).catch(() => ({ photo: p, img: this.createBrokenImage() }))
+          }).catch(() => ({ photo: p, img: new Image()}))
       )
     );
-  }
-
-  private createBrokenImage(): HTMLImageElement {
-    const img = document.createElement('canvas') as any;
-    (img as any).naturalWidth = 1;
-    (img as any).naturalHeight = 1;
-    return img;
   }
 
   private detectMime(url: string): string {
