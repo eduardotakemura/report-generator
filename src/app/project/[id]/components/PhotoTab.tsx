@@ -40,6 +40,9 @@ const PhotoTab: React.FC<PhotoTabProps> = ({ photos, projectId }) => {
       setEditingPhoto(photo);
       setShowPhotoSourceModal(false);
     }
+    
+    // Reset the file input so the same file can be selected again
+    event.target.value = '';
   };
 
   const handleSavePhoto = (editedPhoto: Photo) => {

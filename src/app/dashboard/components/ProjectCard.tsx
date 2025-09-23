@@ -40,21 +40,40 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onOpen }) => {
       {project.photos.length > 0 && (
         <div className="project-images-preview">
           <div className="images-grid">
-            {photosToShow.map((photo, index) => (
-              <div key={photo.url || photo.file?.name || index} className="image-preview">
-                <Image 
-                  src={getPhotoSrc(photo)} 
-                  alt={`Preview ${index + 1}`}
-                  width={100}
-                  height={100}
-                  style={{ objectFit: 'cover' }}
-                  onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                  }}
-                />
-              </div>
-            ))}
+            {photosToShow.map((photo, index) => {
+              const photoSrc = getPhotoSrc(photo);
+              const isObjectUrl = photoSrc.startsWith('blob:');
+              
+              return (
+                <div key={photo.url || photo.file?.name || index} className="image-preview">
+                  {isObjectUrl ? (
+                    <img 
+                      src={photoSrc} 
+                      alt={`Preview ${index + 1}`}
+                      width={100}
+                      height={100}
+                      style={{ objectFit: 'cover' }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  ) : (
+                    <Image 
+                      src={photoSrc} 
+                      alt={`Preview ${index + 1}`}
+                      width={100}
+                      height={100}
+                      style={{ objectFit: 'cover' }}
+                      onError={(e) => {
+                        const target = e.target as HTMLImageElement;
+                        target.style.display = 'none';
+                      }}
+                    />
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

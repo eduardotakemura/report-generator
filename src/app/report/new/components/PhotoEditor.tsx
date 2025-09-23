@@ -17,6 +17,22 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
 }) => {
   const [photo, setPhoto] = React.useState<Photo | null>(editingPhoto);
 
+  // Update local state when editingPhoto prop changes
+  React.useEffect(() => {
+    if (editingPhoto) {
+      // Ensure File object is preserved by creating a new object with all properties
+      const preservedPhoto: Photo = {
+        subtitle: editingPhoto.subtitle,
+        lastModified: editingPhoto.lastModified,
+        file: editingPhoto.file, // Explicitly preserve the File object
+        url: editingPhoto.url
+      };
+      setPhoto(preservedPhoto);
+    } else {
+      setPhoto(null);
+    }
+  }, [editingPhoto]);
+
   if (!editingPhoto) return null;
 
   const handleSave = () => {
@@ -46,10 +62,16 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
               <input
                 type="text"
                 value={photo?.subtitle}
-                onChange={(e) => setPhoto({
-                  ...photo!,
-                  subtitle: e.target.value
-                })}
+                onChange={(e) => {
+                  if (photo) {
+                    setPhoto({
+                      subtitle: e.target.value,
+                      lastModified: photo.lastModified,
+                      file: photo.file, // Explicitly preserve the File object
+                      url: photo.url
+                    });
+                  }
+                }}
                 placeholder="Digite a legenda da foto"
               />
             </div>

@@ -36,11 +36,25 @@ export const ProjectProvider: React.FC<ProjectProviderProps> = ({ children }) =>
 
   const updateProject = (projectId: string, updates: Partial<Project>) => {
     setProjects(prev => 
-      prev.map(project => 
-        project.id === projectId 
-          ? { ...project, ...updates, lastModified: new Date() }
-          : project
-      )
+      prev.map(project => {
+        if (project.id === projectId) {
+          // Ensure File objects in photos are preserved
+          const updatedProject = { ...project, ...updates, lastModified: new Date() };
+          
+          if (updates.photos) {
+            // Explicitly preserve File objects in photos
+            updatedProject.photos = updates.photos.map(photo => ({
+              subtitle: photo.subtitle,
+              lastModified: photo.lastModified,
+              file: photo.file, // Explicitly preserve File object
+              url: photo.url
+            }));
+          }
+          
+          return updatedProject;
+        }
+        return project;
+      })
     );
   };
 
