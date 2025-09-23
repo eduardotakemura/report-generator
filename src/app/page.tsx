@@ -104,7 +104,7 @@ export default function Home() {
               <div className="step-number">2</div>
               <div className="step-content">
                 <h3>Organize e Categorize</h3>
-                <p>O sistema organiza automaticamente por tipo e localização</p>
+                <p>Organize como as fotos serão organizadas no relatório</p>
               </div>
             </div>
             
@@ -133,7 +133,7 @@ export default function Home() {
             </div>
             <div className="cta-note">
               <span className="note-icon">✓</span>
-              Sem necessidade de instalação • Acesso imediato
+              Sem necessidade de instalação e Acesso imediato
             </div>
           </div>
         </div>

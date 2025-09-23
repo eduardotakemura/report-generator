@@ -222,7 +222,9 @@ doc.text(`Gerado em: ${timestamp}`, this.margin, this.pageHeight - 12);
         const dy = y + (boxH - drawH) / 2;
 
         try {
-          const mime = this.detectMime(getPhotoSrc(item.photo));
+          const photoSrc = getPhotoSrc(item.photo);
+          if (!photoSrc) throw new Error('No photo source');
+          const mime = this.detectMime(photoSrc);
           doc.addImage(item.img, mime, dx, dy, drawW, drawH);
         } catch {
           this.drawPlaceholder(dx, dy, boxW, boxH);
@@ -281,7 +283,9 @@ doc.text(`Gerado em: ${timestamp}`, this.margin, this.pageHeight - 12);
             const img = new Image();
             img.onload = () => resolve({ photo: p, img });
             img.onerror = () => reject();
-            img.src = getPhotoSrc(p) || '';
+            const photoSrc = getPhotoSrc(p);
+            if (!photoSrc) throw new Error('No photo source');
+            img.src = photoSrc;
           }).catch(() => ({ photo: p, img: new Image()}))
       )
     );

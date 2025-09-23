@@ -16,6 +16,8 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
   onCancel
 }) => {
   const [photo, setPhoto] = React.useState<Photo | null>(editingPhoto);
+  const [imageSrc, setImageSrc] = React.useState<string | null>(null);
+  const [isImageLoading, setIsImageLoading] = React.useState(true);
 
   // Update local state when editingPhoto prop changes
   React.useEffect(() => {
@@ -28,10 +30,26 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
         url: editingPhoto.url
       };
       setPhoto(preservedPhoto);
+      
+      // Generate image source
+      const src = getPhotoSrc(preservedPhoto);
+      setImageSrc(src || null);
+      setIsImageLoading(true);
     } else {
       setPhoto(null);
+      setImageSrc(null);
+      setIsImageLoading(false);
     }
   }, [editingPhoto]);
+
+  const handleImageLoad = () => {
+    setIsImageLoading(false);
+  };
+
+  const handleImageError = () => {
+    setIsImageLoading(false);
+    setImageSrc(null);
+  };
 
   if (!editingPhoto) return null;
 
@@ -53,7 +71,27 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
 
         <div className="photo-editor-body">
           <div className="photo-preview">
-            <img src={getPhotoSrc(photo!)} alt="Preview" />
+            {isImageLoading && (
+              <div className="image-loading">
+                <div className="loading-spinner">⏳</div>
+                <p>Carregando imagem...</p>
+              </div>
+            )}
+            {imageSrc && (
+              <img 
+                src={imageSrc} 
+                alt="Preview" 
+                onLoad={handleImageLoad}
+                onError={handleImageError}
+                style={{ display: isImageLoading ? 'none' : 'block' }}
+              />
+            )}
+            {!imageSrc && !isImageLoading && (
+              <div className="image-error">
+                <div className="error-icon">❌</div>
+                <p>Erro ao carregar imagem</p>
+              </div>
+            )}
           </div>
           
           <div className="photo-edit-form">
@@ -64,12 +102,17 @@ const PhotoEditor: React.FC<PhotoEditorProps> = ({
                 value={photo?.subtitle}
                 onChange={(e) => {
                   if (photo) {
-                    setPhoto({
+                    const updatedPhoto = {
                       subtitle: e.target.value,
                       lastModified: photo.lastModified,
                       file: photo.file, // Explicitly preserve the File object
                       url: photo.url
-                    });
+                    };
+                    setPhoto(updatedPhoto);
+                    
+                    // Update image source if needed
+                    const newSrc = getPhotoSrc(updatedPhoto);
+                    setImageSrc(newSrc || null);
                   }
                 }}
                 placeholder="Digite a legenda da foto"

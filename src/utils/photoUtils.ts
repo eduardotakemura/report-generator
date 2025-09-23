@@ -4,9 +4,9 @@ import type { Photo } from '../models/Photo';
  * Gets the image source URL from a Photo object
  * Handles both URL-based photos (dummy data) and File-based photos (uploads)
  */
-export const getPhotoSrc = (photo: Photo): string => {
+export const getPhotoSrc = (photo: Photo): string | null => {
   if (!photo) {
-    return '';
+    return null;
   }
   
   if (photo.file) {
@@ -15,14 +15,14 @@ export const getPhotoSrc = (photo: Photo): string => {
       return URL.createObjectURL(photo.file);
     } catch (error) {
       console.error('Error creating object URL:', error);
-      return '';
+      return null;
     }
   } else if (photo.url) {
     // For dummy data or existing photos with URLs
     return photo.url;
   }
   
-  return '';
+  return null;
 };
 
 /**

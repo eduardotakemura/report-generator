@@ -156,7 +156,7 @@ const PageEditor: React.FC<PageEditorProps> = ({
               {currentPage.photos.map((photo, index) => (
                 <div key={index} className="photo-card">
                   <div className="photo-preview">
-                    <img src={getPhotoSrc(photo)} alt={`Foto ${index + 1}`} />
+                    <img src={getPhotoSrc(photo) || ''} alt={`Foto ${index + 1}`} />
                     <div className="photo-overlay">
                       <button 
                         className="photo-action-btn edit-btn"

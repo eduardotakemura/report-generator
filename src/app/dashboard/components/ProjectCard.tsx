@@ -42,6 +42,8 @@ const ProjectCard: React.FC<ProjectCardProps> = ({ project, onOpen }) => {
           <div className="images-grid">
             {photosToShow.map((photo, index) => {
               const photoSrc = getPhotoSrc(photo);
+              if (!photoSrc) return null;
+              
               const isObjectUrl = photoSrc.startsWith('blob:');
               
               return (

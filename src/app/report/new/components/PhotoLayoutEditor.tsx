@@ -166,7 +166,7 @@ const PhotoLayoutEditor: React.FC<PhotoLayoutEditorProps> = ({
             onDragStart={(e) => handleDragStart(e, item.photo!, index)}
             onDragEnd={handleDragEnd}
           >
-            <img src={getPhotoSrc(item.photo)} alt={item.photo.subtitle || `Foto ${index + 1}`} />
+            <img src={getPhotoSrc(item.photo) || ''} alt={item.photo.subtitle || `Foto ${index + 1}`} />
             <div className="photo-overlay">
               <span className="photo-subtitle">{item.photo.subtitle || 'Sem legenda'}</span>
               <div className="drag-handle">⋮⋮</div>

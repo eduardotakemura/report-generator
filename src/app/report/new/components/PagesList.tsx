@@ -77,7 +77,7 @@ const PagesList: React.FC<PagesListProps> = ({
                           {page.photos.slice(0, 4).map((photo, index) => (
                             <div key={index} className="photo-thumbnail">
                               <Image 
-                                src={getPhotoSrc(photo)} 
+                                src={getPhotoSrc(photo) || ''} 
                                 alt={`Preview ${index + 1}`}
                                 width={100}
                                 height={100}

@@ -102,7 +102,7 @@ const PhotoTab: React.FC<PhotoTabProps> = ({ photos, projectId }) => {
           {photos.map((photo, index) => (
             <div key={index} className="photo-card">
               <div className="photo-image">
-                <img src={getPhotoSrc(photo)} alt={photo.subtitle} />
+                <img src={getPhotoSrc(photo) || ''} alt={photo.subtitle} />
                 <div className="photo-overlay">
                   <button 
                     className="photo-action-btn edit-btn"
